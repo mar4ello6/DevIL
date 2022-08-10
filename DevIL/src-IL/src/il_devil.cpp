@@ -881,7 +881,8 @@ ILboolean ILAPIENTRY ilBlit(ILuint Source, ILint DestX,  ILint DestY,   ILint De
 //Fixed alpha blending here, so it don't save old alpha, but mix it.
 ILboolean ILAPIENTRY ilBlit_AlphaFix(ILuint Source, ILint DestX,  ILint DestY,   ILint DestZ, 
                                            ILuint SrcX,  ILuint SrcY,   ILuint SrcZ,
-                                           ILuint Width, ILuint Height, ILuint Depth)
+                                           ILuint Width, ILuint Height, ILuint Depth,
+										   bool NoBlend)
 {
 	ILuint 		x, y, z, ConvBps, ConvSizePlane;
 	ILimage 	*Dest,*Src;
@@ -965,7 +966,7 @@ ILboolean ILAPIENTRY ilBlit_AlphaFix(ILuint Source, ILint DestX,  ILint DestY,  
 					const ILuint  AlphaIdx = SrcIndex + bpp_without_alpha;
 
 					// In case of Alpha channel, the data is blended.
-					if (ilIsEnabled(IL_BLIT_BLEND)) {
+					if (ilIsEnabled(IL_BLIT_BLEND) && !NoBlend) {
 						// https://stackoverflow.com/a/727339
 						float newAlpha = 1 - (1 - Converted[AlphaIdx] / ((float)IL_MAX_UNSIGNED_BYTE)) * (1 - Dest->Data[DestAlphaIdx] / ((float)IL_MAX_UNSIGNED_BYTE));
 						float oldAlphaD = Dest->Data[DestAlphaIdx] / ((float)IL_MAX_UNSIGNED_BYTE);
